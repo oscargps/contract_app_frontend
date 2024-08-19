@@ -1,13 +1,13 @@
 import './App.css'
+import { ContractAppProvider } from './Context/Context'
+import { ContractAppRouter } from './Router/AppRouter'
 
 function App() {
 
   return (
-    <>
-      <div>
-      </div>
-      <h1>Contract App</h1>
-    </>
+    <ContractAppProvider>
+      <ContractAppRouter />
+    </ContractAppProvider>
   )
 }
 
