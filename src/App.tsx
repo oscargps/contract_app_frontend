@@ -1,3 +1,4 @@
+import { NextUIProvider } from '@nextui-org/react'
 import './App.css'
 import { ContractAppProvider } from './Context/Context'
 import { ContractAppRouter } from './Router/AppRouter'
@@ -5,9 +6,11 @@ import { ContractAppRouter } from './Router/AppRouter'
 function App() {
 
   return (
-    <ContractAppProvider>
-      <ContractAppRouter />
-    </ContractAppProvider>
+    <NextUIProvider>
+      <ContractAppProvider>
+        <ContractAppRouter />
+      </ContractAppProvider>
+    </NextUIProvider>
   )
 }
 
