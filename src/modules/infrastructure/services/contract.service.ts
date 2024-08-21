@@ -10,7 +10,7 @@ export class ContractService {
                 headers: { "search-criteria": criteria, "search-data": data },
             });
         } catch (error) {
-            return error
+            throw error
         }
     }
 }

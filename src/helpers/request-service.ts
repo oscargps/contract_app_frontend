@@ -21,6 +21,6 @@ export const RequestService = async (props: Props) => {
         }
         return await response.json();
     } catch (error) {
-        return error
+       throw error
     }
 }

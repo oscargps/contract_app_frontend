@@ -11,7 +11,7 @@ export class ContractController {
         try {
             return await this.contractService.getContract(criteria, data);
         } catch (error) {
-            return error
+            throw error
         }
     }
 }
