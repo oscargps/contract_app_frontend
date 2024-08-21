@@ -8,7 +8,10 @@ export class ContractController {
     }
 
     async getContracts(criteria: string, data: string) {
-        const resp = await this.contractService.getContract(criteria, data);
-        return resp
+        try {
+            return await this.contractService.getContract(criteria, data);
+        } catch (error) {
+            return error
+        }
     }
 }

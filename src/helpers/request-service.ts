@@ -10,18 +10,17 @@ type Props = {
 
 export const RequestService = async (props: Props) => {
     const { url, body, headers, method } = props
-    return fetch(url, {
-        method: method,
-        headers: headers,
-        body: JSON.stringify(body),
-    })
-        .then(response =>
-            response.json()
-        )
-        .then(data => {
-            return data;
+    try {
+        const response = await fetch(url, {
+            method: method,
+            headers: headers,
+            body: JSON.stringify(body),
         })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        return error
+    }
 }
