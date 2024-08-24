@@ -13,4 +13,15 @@ export class ContractService {
             throw error
         }
     }
+    async getLists() {
+        try {
+            return await RequestService({
+                url: `${CONFIG.URL}contracts/get-lists`,
+                method: "GET",
+                headers: {},
+            });
+        } catch (error) {
+            throw error
+        }
+    }
 }
