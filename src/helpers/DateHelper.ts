@@ -21,6 +21,20 @@ export const GetDuration = (start_date: string | undefined, end_date: string | u
     }
 }
 
+export const GetDurationInMonths = (start_date: string | undefined, end_date: string | undefined) => {
+    if (start_date && end_date) {
+        const start = new Date(start_date);
+        const end = new Date(end_date);
+
+        const yearDifference = end.getFullYear() - start.getFullYear();
+        const monthDifference = end.getMonth() - start.getMonth();
+
+        const totalMonths = (yearDifference * 12 + monthDifference) * -1;
+
+        return `${totalMonths} Meses`;
+    }
+}
+
 export const validateDates = (start_date: string | undefined, end_date: string | undefined): boolean => {
     if (start_date && end_date) {
 

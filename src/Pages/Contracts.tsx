@@ -5,6 +5,8 @@ import {
     Button,
     Select,
     SelectItem,
+    useDisclosure,
+    Spinner,
 } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
 import EyeIcon from "../assets/icons/Eye";
@@ -17,6 +19,8 @@ import { Toaster, toast } from "sonner";
 import { statusColorMap } from "../Constants/StatusColorMap.ts";
 import ArrowUpIcon from "../assets/icons/ArrowUp.tsx";
 import { useNavigate } from "react-router-dom";
+import ContractDetail from "../Components/ContractDetail.tsx";
+import { GetDurationInMonths } from "../helpers/DateHelper.ts";
 
 const columns = [
     { name: "N° Contrato", uid: "contract_number" },
@@ -36,11 +40,13 @@ const Contracts = () => {
     ];
     const [isValidationError, setValidationError] = useState(false);
     const [searchedContract, setSearchedContract] = useState<any>([]);
+    const [selectedContract, setSelectedContract] = useState<any>([]);
     const navigate = useNavigate()
     const [dataToSearch, setDataToSearch] = useState({
         criteria: SearchOptions[0].value,
         data: "",
     });
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const { data, isSuccess, refetch, isFetching, isError } =
         useGetContract(dataToSearch.criteria, dataToSearch.data);
@@ -85,14 +91,24 @@ const Contracts = () => {
                     );
                 case "provider":
                     return contract.provider.full_name;
+                case "purpose":
+                    return contract.purpose.slice(0, 50) + "...";
                 case "supervisor":
                     return contract.supervisor.full_name;
+                case "duration":
+                    return GetDurationInMonths(contract.end_date, contract.start_date)
                 case "actions":
                     return (
                         <div className=" flex items-center justify-center">
-                            <Tooltip content="Details">
+                            <Tooltip content="Ver">
                                 <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                                    <EyeIcon />
+                                    <Button color="default"
+                                        variant="light" onPress={() => {
+                                            setSelectedContract([contract])
+                                            onOpen()
+                                        }} isIconOnly>
+                                        <EyeIcon />
+                                    </Button>
                                 </span>
                             </Tooltip>
                         </div>
@@ -162,11 +178,11 @@ const Contracts = () => {
                         <SearchIcon />
                     </Button>
                 </div>
-                <Button color="default" startContent={<AddIcon />} onPress={()=>navigate("/contracts/new")}>
+                <Button color="default" startContent={<AddIcon />} onPress={() => navigate("/contracts/new")}>
                     Nuevo
                 </Button>
             </div>
-            {isFetching && <div className="loader h-28 w-28 mx-auto my-4"></div>}
+            {isFetching && <Spinner />}
             {searchedContract.length ? (
                 <TableTemplate
                     columns={columns}
@@ -180,6 +196,7 @@ const Contracts = () => {
                     <h1 className="mt-2 text-center text-gray-500">Busca un contrato en el campo de arriba</h1>
                 </div>
             )}
+            <ContractDetail isOpen={isOpen} contract={selectedContract} onOpenChangeFn={onOpenChange} />
         </>
     );
 };
