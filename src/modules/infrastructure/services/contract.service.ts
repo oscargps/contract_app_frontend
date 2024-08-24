@@ -14,6 +14,17 @@ export class ContractService {
             throw error
         }
     }
+    async getContractExtension(contract_id: string) {
+        try {
+            return await RequestService({
+                url: `${CONFIG.URL}contracts/get-contract-extensions`,
+                method: "GET",
+                headers: { "contract-id": contract_id },
+            });
+        } catch (error) {
+            throw error
+        }
+    }
     async createContract(data: IContract) {
         try {
             return await RequestService({
