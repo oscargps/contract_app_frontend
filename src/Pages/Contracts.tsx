@@ -76,11 +76,11 @@ const Contracts = () => {
                     return (
                         <Chip
                             className="capitalize"
-                            color={statusColorMap[contract.status]}
+                            color={statusColorMap[contract.status_value.value]}
                             size="sm"
                             variant="flat"
                         >
-                            {cellValue}
+                            {contract.status_value.value}
                         </Chip>
                     );
                 case "provider":
