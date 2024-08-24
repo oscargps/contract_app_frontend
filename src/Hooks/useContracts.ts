@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { ContractController } from '../modules/infrastructure/controllers/contract.controller';
+import { IContract } from '../Types/IContract';
 
 const contractController = new ContractController();
 
@@ -18,3 +19,9 @@ export const useGetContract = (criteria: string, data: string) => {
         gcTime: 0
     })
 };
+
+export const useCreateContract = () => useMutation({
+    mutationFn: (contract: IContract) => {
+        return contractController.createContract(contract);
+    },
+})

@@ -14,6 +14,13 @@ export class ContractController {
             throw error
         }
     }
+    async createContract(data:any) {
+        try {
+            return await this.contractService.createContract(data);
+        } catch (error) {
+            throw error
+        }
+    }
 
     async getLists() {
         try {

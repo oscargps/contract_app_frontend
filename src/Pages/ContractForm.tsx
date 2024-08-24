@@ -6,6 +6,7 @@ import {
     Textarea,
     Autocomplete,
     Chip,
+    Spinner,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { IProvider } from "../Types/IProvider";
@@ -15,6 +16,8 @@ import { ContractSchema } from "../Validations/ContractSchema";
 import { useMapLists } from "../Hooks/useMapLists";
 import { Toaster, toast } from "sonner";
 import { GetDuration, validateDates } from "../helpers/DateHelper";
+import { useCreateContract } from "../Hooks/useContracts";
+
 
 const ContractForm = () => {
     const [formData, setFormData] = useState<any>();
@@ -22,6 +25,7 @@ const ContractForm = () => {
     const [catalogs, setCatalogs] = useState<ICatalog[]>([]);
     const [providers, setProviders] = useState<IProvider[]>([]);
     const [supervisors, setSupervisors] = useState<ISupervisor[]>([]);
+    const { mutate, isPending, isError, isSuccess } = useCreateContract()
 
     useMapLists(setProviders, setSupervisors, setCatalogs)
 
@@ -29,6 +33,21 @@ const ContractForm = () => {
         getContractDuration()
         getDateValidation()
     }, [formData?.start_date, formData?.end_date])
+
+    useEffect(() => {
+        if (!isPending) {
+            if (isSuccess) {
+                toast.success("Nuevo contrato creado exitosamente!");
+                setFormData({});
+                setTimeout(() => {
+                    window.location.assign('/')
+                }, 2000)
+            }
+            if (isError) {
+                toast.error("Hubo un error, intenta mas tarde!");
+            }
+        }
+    }, [isPending])
 
     const addDataForm = (key: string, value: any) => {
         setFormData({
@@ -41,6 +60,7 @@ const ContractForm = () => {
         try {
             ContractSchema.parse(formData)
             setErrors({})
+            mutate(formData)
         } catch (error: any) {
             toast.error("Error: Información faltante o incorrecta");
             mapErrors(error)
@@ -147,6 +167,7 @@ const ContractForm = () => {
                     isRequired
                     name="supervisor_id"
                     isInvalid={Boolean(errors?.supervisor_id)}
+                    isDisabled={!(supervisors.length > 0)}
                     onSelectionChange={(data) => {
                         addDataForm("supervisor_id", data);
                     }}
@@ -204,6 +225,7 @@ const ContractForm = () => {
                     isRequired
                     name="status"
                     isInvalid={Boolean(errors?.status)}
+                    isDisabled={!(catalogs.length > 0)}
                     onSelectionChange={(data) => {
                         addDataForm("status", data);
                     }}
@@ -260,9 +282,11 @@ const ContractForm = () => {
                 Duración:     <Chip>{formData?.duration}</Chip>
             </div>}
             <div className="flex justify-center m-16" >
-                <Button color="default" size="md" endContent={<SaveIcon />} onPress={handleSubmit}>
-                    Guardar
-                </Button>
+                {(isPending && catalogs.length) ?
+                    <Spinner size="lg" /> :
+                    <Button color="default" size="md" endContent={<SaveIcon />} onPress={handleSubmit}>
+                        Guardar
+                    </Button>}
             </div>
         </>
     );

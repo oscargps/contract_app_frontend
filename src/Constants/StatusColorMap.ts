@@ -4,4 +4,5 @@ export const statusColorMap: Record<string, ChipProps["color"]> = {
     Activo: "success",
     Embargado: "danger",
     Inactivo: "warning",
+    "Pendiente por comenzar": "primary",
 };
